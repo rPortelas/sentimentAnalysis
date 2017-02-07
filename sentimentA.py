@@ -4,10 +4,37 @@ from os.path import join, dirname
 from watson_developer_cloud import AlchemyLanguageV1
 from time import sleep
 import vlc
-
-
+import csv
 alchemy_language = AlchemyLanguageV1(api_key='2028a073cb9e01642fc80f06c315946833cdb0a2')
 
+
+raw = []
+sentiment = []
+paragraphs = []
+
+
+filename = "handLabelledData.csv"
+ 
+f = open(filename, 'rb') 
+reader = csv.reader(f)
+raw = list(reader) 
+print("File Added")
+
+#load tagged samples
+for row in raw:
+	sentiment.append(unicode(row[1], "utf-8"))
+	paragraphs.append(unicode(row[0], "utf-8"))
+
+#sentiment analisys on samples
+i = 0
+for paragraph in paragraphs:
+	print "SAMPLE # "
+	print i
+	i = i +1
+	print paragraph
+	print(json.dumps(alchemy_language.emotion(text=paragraph), indent=2))
+
+print(newparagraph)
 neutralScene = "Harry, who was on a top bunk above Ron, lay staring up at the\
 canvas ceiling of the tent, watching the glow of an occasional leprechaun\
 lantern flying overhead, and picturing again some of\
@@ -42,9 +69,10 @@ odd flashes of light and noises like gunfire. Loud jeering, roars of\
 laughter, and drunken yells were drifting toward them; then came\
 a burst of strong green light, which illuminated the scene"'
 
-print(json.dumps(alchemy_language.emotion(text=neutralScene), indent=2))
-print(json.dumps(alchemy_language.emotion(text=fearScene), indent=2))
+#print(json.dumps(alchemy_language.emotion(text=neutralScene), indent=2))
+#print(json.dumps(alchemy_language.emotion(text=fearScene), indent=2))
 #print alchemy_language.emotion(text=fearScene).get("docEmotions").get("anger")
+'''
 p = vlc.MediaPlayer("01. Thundertruck.mp3")
 p.play()
 for i in neutralScene:
@@ -58,4 +86,4 @@ for i in fearScene:
 	sleep(0.01)
 	sys.stdout.write(i)
 	sys.stdout.flush()
-
+'''
