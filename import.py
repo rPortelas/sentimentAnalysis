@@ -3,11 +3,12 @@ import csv
 raw = []
 sentiment = []
 paragraphs = []
-newparagraph = []
+newparagraphs = []
 
 filename = "handLabelledData.csv"
  
-f = open(filename, 'rb') 
+f = open(filename, "rt", encoding= "utf-8")
+
 reader = csv.reader(f)
 raw = list(reader) 
 
@@ -19,8 +20,8 @@ for row in raw:
 	paragraphs.append(row[0])
 
 for i in paragraphs:
-	newparagraph.append(unicode(i, "utf-8"))
+	newparagraphs.append(i.replace("\n", ""))
 
-print(newparagraph)
+print(newparagraphs)
 #print("Over")
 #print(sentiment)
