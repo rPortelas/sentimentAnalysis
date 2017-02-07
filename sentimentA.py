@@ -6,7 +6,7 @@ from time import sleep
 import vlc
 
 
-alchemy_language = AlchemyLanguageV1(api_key='1e5de446c25a11fa869cb1b2bb7b9eccfdbbb001')
+alchemy_language = AlchemyLanguageV1(api_key='2028a073cb9e01642fc80f06c315946833cdb0a2')
 
 neutralScene = "Harry, who was on a top bunk above Ron, lay staring up at the\
 canvas ceiling of the tent, watching the glow of an occasional leprechaun\
@@ -42,8 +42,8 @@ odd flashes of light and noises like gunfire. Loud jeering, roars of\
 laughter, and drunken yells were drifting toward them; then came\
 a burst of strong green light, which illuminated the scene"'
 
-#print(json.dumps(alchemy_language.emotion(text=neutralScene), indent=2))
-#print(json.dumps(alchemy_language.emotion(text=fearScene), indent=2))
+print(json.dumps(alchemy_language.emotion(text=neutralScene), indent=2))
+print(json.dumps(alchemy_language.emotion(text=fearScene), indent=2))
 #print alchemy_language.emotion(text=fearScene).get("docEmotions").get("anger")
 p = vlc.MediaPlayer("01. Thundertruck.mp3")
 p.play()
