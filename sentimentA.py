@@ -25,6 +25,10 @@ for row in raw:
 	sentiment.append(unicode(row[1], "utf-8"))
 	paragraphs.append(unicode(row[0], "utf-8"))
 
+#set accuracy checking variables
+nbSamples = 0
+accuracy = 0
+
 #sentiment analisys on samples
 i = 0
 for paragraph in paragraphs:
@@ -33,6 +37,9 @@ for paragraph in paragraphs:
 	i = i +1
 	print paragraph
 	print(json.dumps(alchemy_language.emotion(text=paragraph), indent=2))
+	emotions = alchemy_language.emotion(text=paragraph).get("docEmotions")
+	print(emotions.get("anger"))
+	print max(emotions.iterkeys(), key=(lambda key: emotions[key]))
 
 print(newparagraph)
 neutralScene = "Harry, who was on a top bunk above Ron, lay staring up at the\
@@ -71,7 +78,6 @@ a burst of strong green light, which illuminated the scene"'
 
 #print(json.dumps(alchemy_language.emotion(text=neutralScene), indent=2))
 #print(json.dumps(alchemy_language.emotion(text=fearScene), indent=2))
-#print alchemy_language.emotion(text=fearScene).get("docEmotions").get("anger")
 '''
 p = vlc.MediaPlayer("01. Thundertruck.mp3")
 p.play()
