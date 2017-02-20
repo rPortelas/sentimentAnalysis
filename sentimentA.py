@@ -1,3 +1,4 @@
+from __future__ import division
 import sys
 import json
 from os.path import join, dirname
@@ -9,8 +10,15 @@ alchemy_language = AlchemyLanguageV1(api_key='2028a073cb9e01642fc80f06c315946833
 
 
 raw = []
-sentiment = []
 paragraphs = []
+sentiments = []
+guesses = []
+alchemyOutputs = []
+
+#load alchemyOutputs
+with open('alchemyRecords.txt', 'r') as f:
+   alchemyOutputs = json.load(f)
+
 
 
 filename = "handLabelledData.csv"
@@ -22,59 +30,65 @@ print("File Added")
 
 #load tagged samples
 for row in raw:
-	sentiment.append(unicode(row[1], "utf-8"))
+	sentiments.append(unicode(row[1], "utf-8"))
 	paragraphs.append(unicode(row[0], "utf-8"))
 
 #set accuracy checking variables
-nbSamples = 0
+nbSuccess = 0
 accuracy = 0
 
 #sentiment analisys on samples
 i = 0
 for paragraph in paragraphs:
-	print "SAMPLE # "
+	#Right now only looking at 50 first paragraphs, TODO finish labelling
+	if (i >= 50):
+		break
+	#print "SAMPLE # "
+	#print i
+	#print paragraph
+
+	 #print(json.dumps(alchemy_language.emotion(text=paragraph), indent=2))
+	#sentimentDict = alchemy_language.emotion(text=paragraph).get("docEmotions")
+	#alchemyOutputs.append(alchemy_language.emotion(text=paragraph).get("docEmotions"))
+	#print(sentimentDict.get("anger"))
+	guess = max(alchemyOutputs[i].iterkeys(), key=(lambda key: alchemyOutputs[i][key]))
+
+	#disgust is ignored
+	if (guess == "disgust"):
+		alchemyOutputs[i][guess] = 0.0
+		guess = max(alchemyOutputs[i].iterkeys(), key=(lambda key: alchemyOutputs[i][key]))
+
+	#if the greatest detected emotion is < 0.5 sample is seen as neutral
+	if (alchemyOutputs[i][guess] < 0.5):
+		guesses.append("Neutral")
+	elif (guess == "joy"):
+		guesses.append("Happiness")
+	elif (guess == "fear"):
+		guesses.append("Fear")
+	elif (guess == "sadness"):
+		guesses.append("Sadness")
+	elif (guess == "anger"):
+		guesses.append("Anger")
+	else:
+		print "WTF"
+		print guess
 	print i
+	print(guesses[i])
+	print(sentiments[i])
+	print guesses[i] == sentiments[i]
 	i = i +1
-	print paragraph
-	print(json.dumps(alchemy_language.emotion(text=paragraph), indent=2))
-	emotions = alchemy_language.emotion(text=paragraph).get("docEmotions")
-	print(emotions.get("anger"))
-	print max(emotions.iterkeys(), key=(lambda key: emotions[key]))
 
-print(newparagraph)
-neutralScene = "Harry, who was on a top bunk above Ron, lay staring up at the\
-canvas ceiling of the tent, watching the glow of an occasional leprechaun\
-lantern flying overhead, and picturing again some of\
-Krum's more spectacular moves. He was itching to get back on his\
-own Firebolt and try out the Wronski Feint. . . . Somehow Oliver\
-Wood had never managed to convey with all his wriggling diagrams\
-what that move was supposed to look like. . . . Harry saw\
-himself in robes that had his name on the back, and imagined the\
-sensation of hearing a hundred-thousand-strong crowd roar, as\
-Ludo Bagman's voice echoed throughout the stadium, I give\
-you . . . Potter!"
+for j in range(0,i):	
+	#print "guess: " + guesses[j]
+	#print "true: "  + sentiments[j]
+	if guesses[j] == sentiments[j]:
+		nbSuccess = nbSuccess + 1
+print "accuracy: "
+print ((nbSuccess/i)*100)
 
-fearScene = 'Harry never knew whether or not he had actually dropped off to\
-sleep - his fantasies of flying like Krum might well have slipped\
-into actual dreams - all he knew was that, quite suddenly, Mr.\
-Weasley was shouting.\
-"Get up! Ron - Harry - come on now, get up, this is urgent!"\
-Harry sat up quickly and the top of his head hit canvas.\
-"" S matter?"" he said.\
-Dimly, he could tell that something was wrong. The noises in\
-the campsite had changed. The singing had stopped. He could hear\
-screams, and the sound of people running. He slipped down from\
-the bunk and reached for his clothes, but Mr. Weasley, who had\
-pulled on his jeans over his own pajamas, said, "No time, Harry -\
-just grab a jacket and get outside - quickly!"\
-Harry did as he was told and hurried out of the tent, Ron at his\
-heels.\
-By the light of the few fires that were still burning, he could see\
-people running away into the woods, fleeing something that was\
-moving across the field toward them, something that was emitting\
-odd flashes of light and noises like gunfire. Loud jeering, roars of\
-laughter, and drunken yells were drifting toward them; then came\
-a burst of strong green light, which illuminated the scene"'
+#writing alchemy output in file
+#with open('alchemyRecords.txt', 'w') as f:
+#    json.dump(alchemyOutputs, f)
 
 #print(json.dumps(alchemy_language.emotion(text=neutralScene), indent=2))
 #print(json.dumps(alchemy_language.emotion(text=fearScene), indent=2))
