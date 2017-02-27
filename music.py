@@ -1,6 +1,6 @@
 import soundcloud
 import vlc
-
+from time import sleep
 import re
 
 
@@ -20,16 +20,17 @@ print(tracks)
 stream_url = client.get(track.stream_url, allow_redirects=False)
 
 # print the tracks stream URL
-print stream_url.location
+print (stream_url.location)
 
 song = stream_url.location
 
-song = re.sub('s','',song,1)
+#song = re.sub('s','',song,1)
 
-print song
+print (song)
 
 
 p = vlc.MediaPlayer(song)
 p.play()
+sleep(10)
 
 
