@@ -1,8 +1,5 @@
+---
 applications:
-- path: .
-  memory: 128M
-  instances: 1
-  domain: mybluemix.net
-  name: hackDavis2017ereader
-  host: hackDavis2017ereader
-  disk_quota: 1024M
+ - name: emotionanalysis
+   random-route: true
+   memory: 128M

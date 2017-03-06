@@ -68,7 +68,7 @@ def incFalseNeg(sentiment):
 		print sentiment
 
 
-alchemy_language = AlchemyLanguageV1(api_key='2028a073cb9e01642fc80f06c315946833cdb0a2')
+alchemy_language = AlchemyLanguageV1(api_key='7ee2d55604ee59df13c9a315603405291131cf6e')
 raw = []
 paragraphs = []
 sentiments = []
@@ -76,8 +76,8 @@ guesses = []
 alchemyOutputs = []
 
 #load alchemyOutputs
-with open('alchemyRecords.txt', 'r') as f:
-   alchemyOutputs = json.load(f)
+#with open('alchemyRecords.txt', 'r') as f:
+#   alchemyOutputs = json.load(f)
 
 
 
@@ -101,10 +101,9 @@ for paragraph in paragraphs:
 	if (i >= 50):
 		break
 
-	 #print(json.dumps(alchemy_language.emotion(text=paragraph), indent=2))
-	#sentimentDict = alchemy_language.emotion(text=paragraph).get("docEmotions")
-	#alchemyOutputs.append(alchemy_language.emotion(text=paragraph).get("docEmotions"))
-	#print(sentimentDict.get("anger"))
+	print(json.dumps(alchemy_language.emotion(text=paragraph), indent=2))
+	sentimentDict = alchemy_language.emotion(text=paragraph).get("docEmotions")
+	alchemyOutputs.append(alchemy_language.emotion(text=paragraph).get("docEmotions"))
 	guess = max(alchemyOutputs[i].iterkeys(), key=(lambda key: alchemyOutputs[i][key]))
 
 	#disgust is ignored
